@@ -14,6 +14,9 @@ public:
 
     File openWrite(const char* path);
 
+    void listRoot();
+    void listDirectory(const char* path);
+
 private:
     bool m_initialized{false};
 };

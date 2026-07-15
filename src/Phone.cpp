@@ -50,6 +50,12 @@ void Phone::begin()
     {
         Logger::warning("Filesystem not initialized.");
     }
+    else
+    {
+        m_fileSystem.listRoot();
+        m_fileSystem.listDirectory("/DO_NOT_REMOVE");
+        m_fileSystem.listDirectory("/Recordings");
+    }
 
     //=========================================================
     // Configuration
@@ -76,6 +82,10 @@ void Phone::begin()
     m_initialized = true;
 
     Logger::info("System initialized.");
+
+    m_audioPlayer.begin();
+    delay(500);
+    m_audioPlayer.play("/greeting.wav");
 }
 
 void Phone::update()
@@ -98,4 +108,5 @@ void Phone::update()
     }
 
     //m_pinScanner.update();
+    m_audioPlayer.update();
 }

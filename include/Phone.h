@@ -3,7 +3,7 @@
 #include "Config.h"
 #include "FileSystem.h"
 #include "PinScanner.h"
-
+#include "AudioPlayer.h"
 class Phone
 {
 public:
@@ -16,4 +16,5 @@ private:
     Config m_config;
     FileSystem m_fileSystem;
     PinScanner m_pinScanner;
+    AudioPlayer m_audioPlayer;
 };

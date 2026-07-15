@@ -29,6 +29,7 @@ void Phone::begin()
 
     Logger::info(Board::NAME);
     Logger::info(Board::MCU);
+    pinScanner.begin();
 }
 
 void Phone::update()
@@ -47,4 +48,6 @@ void Phone::update()
 
         digitalWrite(Board::LED, ledState);
     }
+
+    pinScanner.update();
 }

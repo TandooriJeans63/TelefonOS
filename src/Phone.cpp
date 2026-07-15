@@ -2,6 +2,7 @@
 #include "Version.h"
 #include "Logger.h"
 #include "Config.h"
+#include "Board.h"
 #include <cstdint>
 #include <Arduino.h>
 
@@ -21,6 +22,13 @@ void Phone::begin()
     config.begin();
 
     initialized = true;
+
+    pinMode(Board::LED, OUTPUT);
+
+    digitalWrite(Board::LED, LOW);
+
+    Logger::info(Board::NAME);
+    Logger::info(Board::MCU);
 }
 
 void Phone::update()
@@ -28,12 +36,15 @@ void Phone::update()
     if (!initialized)
         return;
 
-    static uint32_t timer = 0;
+    static std::uint32_t lastBlink = 0;
+    static bool ledState = false;
 
-    if (millis() - timer > 5000)
+    if (millis() - lastBlink >= 500)
     {
-        timer = millis();
+        lastBlink = millis();
 
-        Logger::info("Firmware running...");
+        ledState = !ledState;
+
+        digitalWrite(Board::LED, ledState);
     }
 }

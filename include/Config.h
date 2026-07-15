@@ -1,22 +1,24 @@
 #pragma once
 
+class FileSystem;
+
 struct ConfigData
 {
-    char language[8] = "hu";
+    char language[8]{"hu"};
 
-    int volume = 85;
+    int volume{85};
 
-    int timeout = 30;
+    int timeout{30};
 
-    bool dialTone = true;
+    bool dialTone{true};
 
-    char application[32] = "guestbook";
+    char application[32]{"guestbook"};
 };
 
 class Config
 {
 public:
-    bool begin();
+    bool begin(FileSystem& fileSystem);
 
     ConfigData& data();
 

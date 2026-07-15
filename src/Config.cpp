@@ -1,7 +1,11 @@
 #include "Config.h"
 
-bool Config::begin()
+#include "FileSystem.h"
+
+bool Config::begin(FileSystem& fileSystem)
 {
+    (void)fileSystem;
+
     return true;
 }
 

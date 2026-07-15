@@ -1,19 +1,24 @@
-#include <Arduino.h>
 #include "Phone.h"
+#include "Version.h"
+#include "Logger.h"
+#include "Config.h"
+#include <cstdint>
+#include <Arduino.h>
+
+Config config;
 
 void Phone::begin()
 {
-    Serial.begin(115200);
+    Logger::begin();
 
-    while (!Serial && millis() < 3000)
-    {
-    }
+    Logger::info("==============================");
+    Logger::info(FW_NAME);
+    Logger::info(FW_VERSION);
+    Logger::info(FW_BUILD_DATE);
+    Logger::info(FW_BUILD_TIME);
+    Logger::info("==============================");
 
-    Serial.println();
-    Serial.println("==========================");
-    Serial.println("TelefonOS");
-    Serial.println("Version 0.0.1");
-    Serial.println("==========================");
+    config.begin();
 
     initialized = true;
 }
@@ -23,12 +28,12 @@ void Phone::update()
     if (!initialized)
         return;
 
-    static unsigned long last = 0;
+    static uint32_t timer = 0;
 
-    if (millis() - last > 5000)
+    if (millis() - timer > 5000)
     {
-        last = millis();
+        timer = millis();
 
-        Serial.println("TelefonOS running...");
+        Logger::info("Firmware running...");
     }
 }

@@ -11,7 +11,8 @@ public:
 
     bool play(const char* filename);
 
-    bool isPlaying() const;
+    bool isPlaying();
+    bool stop();
 
 private:
     AudioPlaySdWav m_playWav;

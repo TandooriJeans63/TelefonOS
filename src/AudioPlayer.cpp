@@ -29,12 +29,27 @@ void AudioPlayer::update()
 
 bool AudioPlayer::play(const char* filename)
 {
+    Logger::info("Playing audio...");
+
     Logger::info(filename);
+
+    if (m_playWav.isPlaying())
+    {
+         Logger::info("Already an audio so stop and play again");
+        m_playWav.stop();
+    }
 
     return m_playWav.play(filename);
 }
 
-bool AudioPlayer::isPlaying() const
+bool AudioPlayer::isPlaying()
 {
     return m_playWav.isPlaying();
+}
+bool AudioPlayer::stop()
+{
+    Logger::info("STOP.");
+    m_playWav.stop();
+
+    return true;
 }

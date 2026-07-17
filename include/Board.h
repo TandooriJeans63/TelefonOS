@@ -28,7 +28,7 @@ namespace Board
     // Hook switch
     //====================================================
 
-    constexpr std::uint8_t HOOK_SWITCH = 255;   // TODO
+    constexpr std::uint8_t HOOK_SWITCH = 40;   // TODO
 
     //====================================================
     // Rotary dial

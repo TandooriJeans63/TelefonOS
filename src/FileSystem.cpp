@@ -22,6 +22,21 @@ bool FileSystem::begin()
 
     m_initialized = true;
 
+    if(!SD.exists("/Recordings"))
+    SD.mkdir("/Recordings");
+
+if(!SD.exists("/Recordings/Default"))
+    SD.mkdir("/Recordings/Default");
+
+if(!SD.exists("/Recordings/HU"))
+    SD.mkdir("/Recordings/HU");
+
+if(!SD.exists("/Recordings/EN"))
+    SD.mkdir("/Recordings/EN");
+
+if(!SD.exists("/Recordings/RO"))
+    SD.mkdir("/Recordings/RO");
+
     return true;
 }
 

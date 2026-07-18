@@ -50,6 +50,7 @@ void rotaryUpdate()
         {
             if(digitalRead(rows[r]) == LOW)
             {
+                
                 detectedKey = keys[r][c];
                 break;
             }

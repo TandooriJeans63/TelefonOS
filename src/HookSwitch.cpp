@@ -2,6 +2,7 @@
 
 constexpr int HOOK_LOW_THRESHOLD  = 300;
 constexpr int HOOK_HIGH_THRESHOLD = 550;
+constexpr int HOOK_DEBOUNCE       = 50;
 
 bool HookSwitch::begin(uint8_t pin)
 {
@@ -9,7 +10,30 @@ bool HookSwitch::begin(uint8_t pin)
 
     pinMode(pin, INPUT);
 
-    m_lastValue = analogRead(pin);
+    // Stabil induló érték
+    delay(300);
+
+    int sum = 0;
+
+    for (int i = 0; i < 20; i++)
+    {
+        sum += analogRead(pin);
+        delay(5);
+    }
+
+    int value = sum / 20;
+
+    Serial.print("INITIAL HOOK = ");
+    Serial.println(value);
+
+    if (value < HOOK_LOW_THRESHOLD)
+        m_state = OFF_HOOK;
+    else
+        m_state = ON_HOOK;
+
+    m_lifted = false;
+    m_replaced = false;
+    m_lastChange = millis();
 
     return true;
 }
@@ -17,22 +41,62 @@ bool HookSwitch::begin(uint8_t pin)
 void HookSwitch::update()
 {
     int value = analogRead(m_pin);
-
-    // leesett az analóg érték
-    if (!m_waitRise && value < HOOK_LOW_THRESHOLD  && m_lastValue > HOOK_HIGH_THRESHOLD)
+    if (m_firstRead)
     {
-        m_lifted = true;
-        m_waitRise = true;
+        if (value > HOOK_HIGH_THRESHOLD)
+        {
+            m_state = ON_HOOK;
+            m_firstRead = false;
+        }
+        else if (value < HOOK_LOW_THRESHOLD)
+        {
+            m_state = OFF_HOOK;
+            m_firstRead = false;
+        }
+
+        return;
     }
 
-    // visszaemelkedett
-    if (m_waitRise && value > HOOK_HIGH_THRESHOLD)
+    switch (m_state)
     {
-        m_replaced = true;
-        m_waitRise = false;
-    }
+        case ON_HOOK:
 
-    m_lastValue = value;
+            if (value < HOOK_LOW_THRESHOLD)
+            {
+                if (millis() - m_lastChange > HOOK_DEBOUNCE)
+                {
+                    m_state = OFF_HOOK;
+                    m_lifted = true;
+
+                    Serial.println("HOOK LIFTED");
+                }
+            }
+            else
+            {
+                m_lastChange = millis();
+            }
+
+            break;
+
+        case OFF_HOOK:
+
+            if (value > HOOK_HIGH_THRESHOLD)
+            {
+                if (millis() - m_lastChange > HOOK_DEBOUNCE)
+                {
+                    m_state = ON_HOOK;
+                    m_replaced = true;
+
+                    Serial.println("HOOK REPLACED");
+                }
+            }
+            else
+            {
+                m_lastChange = millis();
+            }
+
+            break;
+    }
 }
 
 bool HookSwitch::lifted()

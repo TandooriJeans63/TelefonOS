@@ -14,14 +14,19 @@ public:
     bool replaced();
 
 private:
-    uint8_t m_pin = 255;
+      enum State
+    {
+        ON_HOOK,
+        OFF_HOOK
+    };
 
-    int m_lastValue = 0;
+    State m_state = ON_HOOK;
+
+    uint8_t m_pin = 0;
 
     bool m_lifted = false;
-
     bool m_replaced = false;
 
-    bool m_waitRise = false;
-    
+    unsigned long m_lastChange = 0;
+    bool m_firstRead = true;
 };

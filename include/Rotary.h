@@ -1,3 +1,4 @@
+#pragma once
 #ifndef ROTARY_H
 #define ROTARY_H
 
